@@ -1,0 +1,356 @@
+<UserControl x:Class="Veraximet.Wpf.Features.Instrument.Views.Instruments"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Veraximet.Wpf.Features.Instrument.Views" xmlns:viewmodels="clr-namespace:Veraximet.Wpf.Features.Instrument.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:InstrumentsVM}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto"
+                  Background="{StaticResource SurfaceBrush}">
+
+            <Grid Margin="34,30,34,32" MinWidth="1090">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+
+                <Grid Grid.Row="0" Margin="0,0,0,25">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel>
+                        <TextBlock Text="ASSET MANAGEMENT / REGISTER"
+                               Style="{StaticResource Workspace.EyebrowTextStyle}" />
+                        <TextBlock Text="Instruments"
+                               Margin="0,8,0,5"
+                               Style="{StaticResource Workspace.PageTitleTextStyle}" />
+                        <TextBlock Text="Central register of measuring instruments, compliance and verification deadlines"
+                               Style="{StaticResource Workspace.DescriptionTextStyle}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="↻  Refresh"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding RefreshCommand}"
+                            ToolTip="Reload instruments from the database"
+                            Margin="0,0,10,0" />
+                        <Button Content="+  New instrument"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Command="{Binding CreateInstrumentCommand}" IsEnabled="{Binding CanCreate}"
+                            ToolTip="Register a measuring instrument" />
+                    </StackPanel>
+                </Grid>
+
+
+                <StackPanel Grid.Row="1">
+                    <Border Background="{StaticResource Workspace.LoadingBrush}"
+                        BorderBrush="{StaticResource Workspace.LoadingBorderBrush}"
+                        BorderThickness="1" CornerRadius="8"
+                        Padding="13,10" Margin="0,0,0,14">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel>
+                            <TextBlock Text="Loading instrument register…"
+                                   Foreground="{StaticResource AccentBrush}"
+                                   FontSize="{DynamicResource Font.Size.TableCell}"
+                                   Margin="0,0,0,8" />
+                            <ProgressBar Height="3" IsIndeterminate="True"
+                                     Background="{StaticResource StrokeBrush}"
+                                     Foreground="{StaticResource AccentBrush}"
+                                     BorderThickness="0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{StaticResource Workspace.ErrorBrush}"
+                        BorderBrush="{StaticResource Workspace.ErrorBorderBrush}"
+                        BorderThickness="1" CornerRadius="8"
+                        Padding="13,11" Margin="0,0,0,14">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasError}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="{Binding ErrorMessage, FallbackValue=Unable to load instruments.}"
+                               Foreground="{StaticResource DangerBrush}"
+                               FontSize="{DynamicResource Font.Size.TableCell}"
+                               TextWrapping="Wrap" />
+                    </Border>
+                    <Border Background="{StaticResource Workspace.LoadingBrush}"
+                        BorderBrush="{StaticResource Workspace.LoadingBorderBrush}"
+                        BorderThickness="1" CornerRadius="8"
+                        Padding="13,10" Margin="0,0,0,14">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding InfoMessage}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="{Binding InfoMessage}" TextWrapping="Wrap"
+                               Foreground="{StaticResource AccentBrush}"
+                               FontSize="{DynamicResource Font.Size.TableCell}" />
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2">
+
+                    <Border Style="{StaticResource PanelStyle}" Margin="0,0,0,20">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,18">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Search and filter"
+                                           Style="{StaticResource Workspace.SectionTitleTextStyle}" />
+                                    <TextBlock Text="Find instruments by identity, classification or operational status"
+                                           Margin="0,5,0,0"
+                                           Foreground="{StaticResource MutedTextBrush}"
+                                           FontSize="{DynamicResource Font.Size.TableCell}" />
+                                </StackPanel>
+                                <Button Grid.Column="1"
+                                    Content="Clear filters"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding ClearFiltersCommand}" />
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" MinWidth="290" />
+                                    <ColumnDefinition Width="14" />
+                                    <ColumnDefinition Width="1*" MinWidth="160" />
+                                    <ColumnDefinition Width="14" />
+                                    <ColumnDefinition Width="1*" MinWidth="160" />
+                                    <ColumnDefinition Width="14" />
+                                    <ColumnDefinition Width="1*" MinWidth="160" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="SEARCH"
+                                           Margin="0,0,0,8"
+                                           Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                                    <TextBox x:Name="SearchBox"
+                                         Style="{StaticResource Workspace.SearchTextBoxStyle}"
+                                         Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"
+                                         ToolTip="Search by instrument code, name or serial number"
+                                         AutomationProperties.Name="Search instruments" />
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="STATUS" Margin="0,0,0,8"
+                                           Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                                    <ComboBox Style="{StaticResource Workspace.FilterComboBoxStyle}"
+                                          ItemsSource="{Binding StatusFilters}"
+                                          SelectedItem="{Binding SelectedStatusFilter, Mode=TwoWay}"
+                                          ToolTip="Filter by operational, conformity or deadline status"
+                                          AutomationProperties.Name="Status filter" />
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="CATEGORY" Margin="0,0,0,8"
+                                           Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                                    <ComboBox Style="{StaticResource Workspace.FilterComboBoxStyle}"
+                                          ItemsSource="{Binding CategoryFilters}"
+                                          SelectedItem="{Binding SelectedCategoryFilter, Mode=TwoWay}"
+                                          AutomationProperties.Name="Category filter" />
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="6">
+                                    <TextBlock Text="DEPARTMENT" Margin="0,0,0,8"
+                                           Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                                    <ComboBox Style="{StaticResource Workspace.FilterComboBoxStyle}"
+                                          ItemsSource="{Binding DepartmentFilters}"
+                                          SelectedItem="{Binding SelectedDepartmentFilter, Mode=TwoWay}"
+                                          AutomationProperties.Name="Department filter" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+
+                    <Border Style="{StaticResource PanelStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Instrument register"
+                                           Style="{StaticResource Workspace.SectionTitleTextStyle}" />
+                                    <TextBlock Text="Select an instrument to inspect its verification history"
+                                           FontSize="{DynamicResource Font.Size.TableCell}"
+                                           Foreground="{StaticResource MutedTextBrush}"
+                                           Margin="0,6,0,0" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                    <TextBlock Text="MATCHING" VerticalAlignment="Center"
+                                           Style="{StaticResource Workspace.FilterLabelTextStyle}"
+                                           Margin="0,0,9,0" />
+                                    <TextBlock Text="{Binding FilteredCount, StringFormat={}{0:N0}, FallbackValue=—}"
+                                           FontFamily="{DynamicResource Font.Mono}"
+                                           FontSize="{DynamicResource Font.Size.PanelTitle}"
+                                           Foreground="{StaticResource AccentBrush}"
+                                           VerticalAlignment="Center" />
+                                    <TextBlock Text=" / " VerticalAlignment="Center"
+                                           Foreground="{StaticResource MutedTextBrush}"
+                                           Margin="4,0" />
+                                    <TextBlock Text="{Binding TotalCount, StringFormat={}{0:N0}, FallbackValue=—}"
+                                           FontSize="{DynamicResource Font.Size.TableCell}"
+                                           Foreground="{StaticResource MutedTextBrush}"
+                                           VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Border Grid.Row="1" Height="1"
+                                Background="{StaticResource StrokeBrush}"
+                                Margin="0,20,0,15" />
+
+
+                            <Grid Grid.Row="2" Height="445">
+                                <DataGrid x:Name="InstrumentsGrid"
+                                      Style="{StaticResource Workspace.DataGridStyle}"
+                                      ItemsSource="{Binding Instruments}"
+                                      SelectedItem="{Binding SelectedInstrument, Mode=TwoWay}"
+                                      CanUserSortColumns="True"
+                                      AutomationProperties.Name="Instrument register">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="CODE" Width="110"
+                                                        Binding="{Binding InstrumentCode}"
+                                                        ElementStyle="{StaticResource CodeTextStyle}" />
+                                        <DataGridTextColumn Header="INSTRUMENT" MinWidth="185" Width="1.5*"
+                                                        Binding="{Binding InstrumentName}"
+                                                        ElementStyle="{StaticResource DeadlineTextStyle}" />
+                                        <DataGridTextColumn Header="CATEGORY" Width="120"
+                                                        Binding="{Binding Category}"
+                                                        ElementStyle="{StaticResource DeadlineTextStyle}" />
+                                        <DataGridTextColumn Header="DEPARTMENT" Width="120"
+                                                        Binding="{Binding Department}"
+                                                        ElementStyle="{StaticResource DeadlineTextStyle}" />
+                                        <DataGridTextColumn Header="SERIAL NUMBER" Width="135"
+                                                        Binding="{Binding SerialNumber}"
+                                                        ElementStyle="{StaticResource CodeTextStyle}" />
+                                        <DataGridTextColumn Header="NEXT DUE" Width="120"
+                                                        Binding="{Binding NextDueDate, StringFormat={}{0:dd MMM yyyy}, TargetNullValue=—}"
+                                                        ElementStyle="{StaticResource Workspace.DueTextStyle}" />
+                                        <DataGridTemplateColumn Header="DEADLINE" Width="110" SortMemberPath="NextDueDate">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding DueStatusLabel}"
+                                                           Style="{StaticResource Workspace.DueTextStyle}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="CONFORMITY" Width="132" SortMemberPath="ConformityStatusLabel">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border Style="{StaticResource Workspace.ConformityBadgeStyle}">
+                                                        <TextBlock Text="{Binding ConformityStatusLabel}"
+                                                               Style="{StaticResource Workspace.ConformityTextStyle}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="OPERATIONAL" Width="115" SortMemberPath="OperationalStatusLabel">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding OperationalStatusLabel}"
+                                                           Style="{StaticResource Workspace.OperationalTextStyle}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        IsHitTestVisible="False">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding ElementName=InstrumentsGrid, Path=HasItems}" Value="False" />
+                                                        <Condition Binding="{Binding IsLoading}" Value="False" />
+                                                        <Condition Binding="{Binding HasError}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <TextBlock Text="No instruments found"
+                                           FontSize="{DynamicResource Font.Size.EmptyStateTitle}"
+                                           FontWeight="SemiBold" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Change the filters or register a new instrument."
+                                           FontSize="{DynamicResource Font.Size.TableCell}"
+                                           Margin="0,8,0,0"
+                                           Foreground="{StaticResource MutedTextBrush}"
+                                           HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Grid.Row="3" Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Operational status, conformity and deadlines are independent."
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="{DynamicResource Font.Size.Helper}"
+                                       VerticalAlignment="Center" />
+                                <Button Grid.Column="1" Content="Edit selected"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding EditSelectedInstrumentCommand}" IsEnabled="{Binding CanOpenSelected}"
+                                    Margin="0,0,10,0" />
+                                <Button Grid.Column="2" Content="Open details"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    Command="{Binding OpenSelectedInstrumentCommand}" IsEnabled="{Binding CanOpenSelected}" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

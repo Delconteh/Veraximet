@@ -1,0 +1,77 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <BeautifyPath Condition="'$(BeautifyPath)' == ''"></BeautifyPath>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\VeraximetLogoDark.svg" />
+    <None Remove="Assets\Vx_Logo.png" />
+    <None Remove="Assets\Vx_Name_Dark.png" />
+    <None Remove="Assets\Vx_Name_Light.png" />
+    <None Remove="Fonts\IBMPlexSans-Medium.ttf" />
+    <None Remove="Fonts\IBMPlexSans-Regular.ttf" />
+    <None Remove="Fonts\IBMPlexSans-SemiBold.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Behaviors\" />
+    <Folder Include="Converters\" />
+    <Folder Include="TemplateSelectors\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="5.4.0" />
+    <PackageReference Include="SharpVectors" Version="1.8.6" />
+    <PackageReference Include="SharpVectors.Wpf" Version="1.8.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Veraximet.Domain\Veraximet.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Beautify.Contracts">
+      <HintPath>$(BeautifyPath)\Beautify.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Beautify.Controls">
+      <HintPath>$(BeautifyPath)\Beautify.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Beautify.Domain">
+      <HintPath>$(BeautifyPath)\Beautify.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="Beautify.Infrastructure">
+      <HintPath>$(BeautifyPath)\Beautify.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Beautify.Logging">
+      <HintPath>$(BeautifyPath)\Beautify.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Beautify.Themes">
+      <HintPath>$(BeautifyPath)\Beautify.Themes.dll</HintPath>
+    </Reference>
+    <Reference Include="Beautify.Wpf">
+      <HintPath>$(BeautifyPath)\Beautify.Wpf.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\VeraximetLogoDark.svg" />
+    <Resource Include="Assets\Vx_Logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Vx_Name_Dark.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Vx_Name_Light.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Fonts\IBMPlexSans-Medium.ttf" />
+    <Resource Include="Fonts\IBMPlexSans-Regular.ttf" />
+    <Resource Include="Fonts\IBMPlexSans-SemiBold.ttf" />
+  </ItemGroup>
+
+</Project>

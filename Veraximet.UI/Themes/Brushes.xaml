@@ -1,0 +1,43 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="Shell.Background" Color="#101719" />
+    <SolidColorBrush x:Key="Shell.TitleBar" Color="#131D1F" />
+    <SolidColorBrush x:Key="Shell.Sidebar" Color="#172123" />
+    <SolidColorBrush x:Key="Shell.SidebarHover" Color="#223235" />
+    <SolidColorBrush x:Key="Shell.SidebarSelected" Color="#29423D" />
+    <SolidColorBrush x:Key="Shell.Border" Color="#2B3D3F" />
+    <SolidColorBrush x:Key="Shell.Text" Color="#E9F0ED" />
+    <SolidColorBrush x:Key="Shell.Muted" Color="#8DA39D" />
+    <SolidColorBrush x:Key="Shell.Accent" Color="#86BDAC" />
+    <SolidColorBrush x:Key="Shell.AccentDim" Color="#4D7C71" />
+
+    <!-- Shared palette for application features. Existing Home.xaml resource keys are preserved. -->
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#101719" />
+    <SolidColorBrush x:Key="CardBrush" Color="#192326" />
+    <SolidColorBrush x:Key="CardAltBrush" Color="#1D292C" />
+    <SolidColorBrush x:Key="StrokeBrush" Color="#304044" />
+    <SolidColorBrush x:Key="PrimaryTextBrush" Color="#E9F0ED" />
+    <SolidColorBrush x:Key="MutedTextBrush" Color="#8FA49F" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#82B9A8" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#E1BC78" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#E49A93" />
+
+    <!-- Interaction and surfaces -->
+    <SolidColorBrush x:Key="Workspace.InputBrush" Color="#142024" />
+    <SolidColorBrush x:Key="Workspace.HeaderBrush" Color="#202E31" />
+    <SolidColorBrush x:Key="Workspace.ButtonBrush" Color="#253538" />
+    <SolidColorBrush x:Key="Workspace.ButtonBorderBrush" Color="#3C5254" />
+    <SolidColorBrush x:Key="Workspace.HoverBrush" Color="#31474A" />
+    <SolidColorBrush x:Key="Workspace.PressedBrush" Color="#1C2A2D" />
+    <SolidColorBrush x:Key="Workspace.RowHoverBrush" Color="#263538" />
+    <SolidColorBrush x:Key="Workspace.RowSelectedBrush" Color="#294640" />
+    <SolidColorBrush x:Key="Workspace.AccentSurfaceBrush" Color="#233B35" />
+    <SolidColorBrush x:Key="Workspace.AccentBorderBrush" Color="#457466" />
+    <SolidColorBrush x:Key="Workspace.LoadingBrush" Color="#20322F" />
+    <SolidColorBrush x:Key="Workspace.LoadingBorderBrush" Color="#385B53" />
+    <SolidColorBrush x:Key="Workspace.ErrorBrush" Color="#342628" />
+    <SolidColorBrush x:Key="Workspace.ErrorBorderBrush" Color="#7B4848" />
+    <SolidColorBrush x:Key="Workspace.WarningSurfaceBrush" Color="#372F24" />
+    <SolidColorBrush x:Key="Workspace.DangerSurfaceBrush" Color="#382728" />
+</ResourceDictionary>

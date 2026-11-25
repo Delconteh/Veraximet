@@ -1,0 +1,208 @@
+<UserControl x:Class="Veraximet.Wpf.Features.Instrument.Views.InstrumentEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Veraximet.Wpf.Features.Instrument.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="1900" d:DesignWidth="1800">
+
+    <Border Margin="16"
+            HorizontalAlignment="Stretch"     VerticalAlignment="Stretch"
+            CornerRadius="12" BorderThickness="1"   BorderBrush="{StaticResource StrokeBrush}"
+            Background="{StaticResource CardBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="28 24 28 17">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="ASSET MANAGEMENT / INSTRUMENT"
+                               Style="{StaticResource Workspace.EyebrowTextStyle}" />
+                    <TextBlock Text="{Binding Heading}"
+                               Style="{StaticResource Workspace.PageTitleTextStyle}"
+                              
+                               Margin="0 6 0 4" />
+                    <TextBlock Text="{Binding Subheading}"
+                               Style="{StaticResource Workspace.DescriptionTextStyle}" />
+                </StackPanel>
+                <Button Grid.Column="1" Content="Cancel"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding CancelCommand}" IsEnabled="{Binding CanCancel}"
+                        VerticalAlignment="Center" Margin="16 0 0 0" />
+            </Grid>
+
+            
+            <ScrollViewer Grid.Row="1" IsEnabled="{Binding CanSave}" VerticalScrollBarVisibility="Auto" d:Height="1000"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Margin="28 3 28 12">
+                    <Border Background="{StaticResource Workspace.AccentSurfaceBrush}"  BorderBrush="{StaticResource Workspace.AccentBorderBrush}"
+                            BorderThickness="1" CornerRadius="7" Margin="0 0 0 18">
+                        <TextBlock Foreground="{StaticResource AccentBrush}" Padding="10"
+                                   FontSize="{DynamicResource Font.Size.TableCell}"
+                                   Text="Fields marked * are required. "
+                                   
+                                   TextWrapping="Wrap" />
+                    </Border>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,16">
+                            <TextBlock Text="INSTRUMENT CODE *" Margin="0,0,0,7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                            <TextBox Text="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="40" IsReadOnly="{Binding IsEditMode}"
+                                     Style="{StaticResource Workspace.EditorTextBoxStyle}"
+                                     AutomationProperties.Name="Instrument code" />
+                            <TextBlock Text="The code cannot be changed after creation."
+                                       FontSize="{DynamicResource Font.Size.Helper}"
+                                       Foreground="{StaticResource MutedTextBrush}"
+                                       Margin="0,6,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,0,16">
+                            <TextBlock Text="INSTRUMENT NAME *" Margin="0,0,0,7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}"   />
+                            <TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="160"
+                                     Style="{StaticResource Workspace.EditorTextBoxStyle}"
+                                     AutomationProperties.Name="Instrument name" 
+                                     />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 0 0 16">
+                            <TextBlock Text="CATEGORY *" Margin="0 0 0 7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                            <TextBox Text="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="80"
+                                     Style="{StaticResource Workspace.EditorTextBoxStyle}"
+                                     AutomationProperties.Name="Category" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="2" Margin="0 0 0 16">
+                            <TextBlock Text="VERIFICATION INTERVAL (MONTHS) *" Margin="0 0 0 7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                            <TextBox Text="{Binding VerificationIntervalText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="4" Style="{StaticResource Workspace.EditorTextBoxStyle}"
+                                     AutomationProperties.Name="Verification interval in months" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Grid.Column="0" Margin="0  0 0 16">
+                            <TextBlock Text="MANUFACTURER" Margin="0 0 0 7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                            <TextBox Text="{Binding Manufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 
+                                     MaxLength="120" Style="{StaticResource Workspace.EditorTextBoxStyle}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="2" Margin="0 0 0 16">
+                            <TextBlock Text="MODEL" Margin="0 0 0 7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                            <TextBox Text="{Binding Model, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="120" Style="{StaticResource Workspace.EditorTextBoxStyle}" />
+                        </StackPanel>
+
+                 
+                        <StackPanel Grid.Row="3" Grid.Column="0" Margin="0 0 0 16">
+                            <TextBlock Text="SERIAL NUMBER" Margin="0 0 0 7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                            <TextBox Text="{Binding SerialNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="100" Style="{StaticResource Workspace.EditorTextBoxStyle}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="2" Margin="0 0 0 16">
+                            <TextBlock Text="DEPARTMENT" Margin="0 0 0 7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                            <TextBox Text="{Binding Department, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="100" Style="{StaticResource Workspace.EditorTextBoxStyle}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 16">
+                            <TextBlock Text="LOCATION" Margin="0 0 0 7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                            <TextBox Text="{Binding Location, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="160" Style="{StaticResource Workspace.EditorTextBoxStyle}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 16">
+                            <TextBlock Text="DESCRIPTION" Margin="0 0 0 7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                            <TextBox Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="1000" Height="68"
+                                     Style="{StaticResource Workspace.EditorMultilineTextBoxStyle}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 5">
+                            <TextBlock Text="NOTES" Margin="0 0 0 7"
+                                       Style="{StaticResource Workspace.FilterLabelTextStyle}" />
+                            
+                            <TextBox Text="{Binding Notes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="2000" Height="80"
+                                     Style="{StaticResource Workspace.EditorMultilineTextBoxStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+
+            
+            <Border Grid.Row="2" BorderBrush="{StaticResource StrokeBrush}"
+                    BorderThickness="0,1,0,0" Padding="28,16">
+                <Grid>
+                    
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+                                   Foreground="{StaticResource DangerBrush}"
+                                   
+                                   FontSize="{DynamicResource Font.Size.TableCell}"
+                                   MaxWidth="425">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ErrorMessage}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                         
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                    
+                    
+                    <Button Grid.Column="1" Content="Cancel" Margin="0,0,10,0"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            
+                            Command="{Binding CancelCommand}" IsEnabled="{Binding CanCancel}" />
+                    <Button Grid.Column="2" Content="{Binding SaveLabel}"
+                           
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Command="{Binding SaveCommand}" IsEnabled="{Binding CanSave}" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

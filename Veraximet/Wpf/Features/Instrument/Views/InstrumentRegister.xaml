@@ -1,0 +1,6 @@
+<UserControl x:Class="Veraximet.Wpf.Features.Instrument.Views.InstrumentRegister"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Veraximet.Wpf.Features.Instrument.Views">
+    <local:Instruments />
+</UserControl>

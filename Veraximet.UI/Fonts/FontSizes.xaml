@@ -1,0 +1,23 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:Double x:Key="Font.Size.Navigation">17</sys:Double>
+    <sys:Double x:Key="Font.Size.Brand">17.5</sys:Double>
+    <sys:Double x:Key="Font.Size.BrandCaption">12.5</sys:Double>
+    <sys:Double x:Key="Font.Size.HeaderCaption">15.5</sys:Double>
+    <sys:Double x:Key="Font.Size.SectionLabel">14</sys:Double>
+    <sys:Double x:Key="Font.Size.Helper">15</sys:Double>
+    <sys:Double x:Key="Font.Size.EmptyTitle">21</sys:Double>
+    <sys:Double x:Key="Font.Size.EmptyDescription">16</sys:Double>
+
+    <sys:Double x:Key="Font.Size.Button">14</sys:Double>
+    <sys:Double x:Key="Font.Size.PageEyebrow">12</sys:Double>
+    <sys:Double x:Key="Font.Size.PageTitle">30</sys:Double>
+    <sys:Double x:Key="Font.Size.PageDescription">15</sys:Double>
+    <sys:Double x:Key="Font.Size.PanelTitle">19</sys:Double>
+    <sys:Double x:Key="Font.Size.Input">14</sys:Double>
+    <sys:Double x:Key="Font.Size.TableHeader">12</sys:Double>
+    <sys:Double x:Key="Font.Size.TableCell">14</sys:Double>
+    <sys:Double x:Key="Font.Size.EmptyStateTitle">19</sys:Double>
+</ResourceDictionary>

@@ -1,0 +1,81 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37906.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veraximet", "Veraximet\Veraximet.csproj", "{293C06F6-178B-4781-8C57-17B25A120FE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veraximet.Domain", "Veraximet.Domain\Veraximet.Domain.csproj", "{2ABA7074-EDA6-4B23-B849-6ECE701D560A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veraximet.Contracts", "Veraximet.Contracts\Veraximet.Contracts.csproj", "{C09E7B2F-F276-441A-92B1-D15989E7B860}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veraximet.Infrastructure", "Veraximet.Infrastructure\Veraximet.Infrastructure.csproj", "{35D17408-C5C4-493F-8678-F4202D433D9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veraximet.Metrology", "Veraximet.Metrology\Veraximet.Metrology.csproj", "{DDD96C49-E608-4974-9786-B41A889E7973}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		CHANGELOG.md = CHANGELOG.md
+		global.json = global.json
+		LICENSE = LICENSE
+		METROLOGY.html = METROLOGY.html
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veraximet.UI", "Veraximet.UI\Veraximet.UI.csproj", "{BEEFE59A-0556-4F5F-A1D9-99F1E98E142F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Screenshots", "Screenshots", "{613D9840-2A1D-499C-B52F-24554E2EB28D}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Screenshots\Dashboard.png = Docs\Screenshots\Dashboard.png
+		Docs\Screenshots\Details.png = Docs\Screenshots\Details.png
+		Docs\Screenshots\History.png = Docs\Screenshots\History.png
+		Docs\Screenshots\Preview.png = Docs\Screenshots\Preview.png
+		Docs\Screenshots\Registro.png = Docs\Screenshots\Registro.png
+		Docs\Screenshots\Verification.png = Docs\Screenshots\Verification.png
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{293C06F6-178B-4781-8C57-17B25A120FE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{293C06F6-178B-4781-8C57-17B25A120FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{293C06F6-178B-4781-8C57-17B25A120FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{293C06F6-178B-4781-8C57-17B25A120FE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2ABA7074-EDA6-4B23-B849-6ECE701D560A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2ABA7074-EDA6-4B23-B849-6ECE701D560A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2ABA7074-EDA6-4B23-B849-6ECE701D560A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2ABA7074-EDA6-4B23-B849-6ECE701D560A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C09E7B2F-F276-441A-92B1-D15989E7B860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C09E7B2F-F276-441A-92B1-D15989E7B860}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C09E7B2F-F276-441A-92B1-D15989E7B860}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C09E7B2F-F276-441A-92B1-D15989E7B860}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35D17408-C5C4-493F-8678-F4202D433D9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35D17408-C5C4-493F-8678-F4202D433D9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35D17408-C5C4-493F-8678-F4202D433D9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35D17408-C5C4-493F-8678-F4202D433D9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDD96C49-E608-4974-9786-B41A889E7973}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDD96C49-E608-4974-9786-B41A889E7973}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDD96C49-E608-4974-9786-B41A889E7973}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDD96C49-E608-4974-9786-B41A889E7973}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEEFE59A-0556-4F5F-A1D9-99F1E98E142F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEEFE59A-0556-4F5F-A1D9-99F1E98E142F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEEFE59A-0556-4F5F-A1D9-99F1E98E142F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEEFE59A-0556-4F5F-A1D9-99F1E98E142F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{613D9840-2A1D-499C-B52F-24554E2EB28D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B38F5D8-3950-45A3-9ED0-12A77693C93F}
+	EndGlobalSection
+EndGlobal

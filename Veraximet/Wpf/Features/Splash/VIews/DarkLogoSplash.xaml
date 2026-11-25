@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Veraximet.Wpf.Features.Splash.VIews.DarkLogoSplash"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Veraximet.Wpf.Features.Splash.VIews"
+             xmlns:svg="http://sharpvectors.codeplex.com/svgc/" Width="auto" Height="auto"
+             mc:Ignorable="d" >
+    <Grid Background="{StaticResource Shell.Background}">
+        <svg:SvgViewbox Source="pack://application:,,,/Veraximet.UI;component/Assets/VeraximetLogoDark.svg" 
+                        Opacity="0.2"
+                        OptimizePath="False"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Stretch="Uniform"
+                        Margin="100"/>
+
+    </Grid>
+</UserControl>

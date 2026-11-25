@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<BeautifyPath Condition="'$(BeautifyPath)' == ''">  </BeautifyPath>
+		<SignAssembly>False</SignAssembly>
+		<Authors>Delconte Giulio</Authors>
+		<Copyright>@ 2026 | Delconte </Copyright>
+		<PackageIcon>Vx_Logo.png</PackageIcon>
+
+		<ApplicationIcon>Veraximet-Icon-Transparent.ico</ApplicationIcon>
+
+		<Version>0.1.0</Version>
+		<AssemblyVersion>0.1.0.0</AssemblyVersion>
+		<FileVersion>0.1.0.0</FileVersion>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<Product>Veraximet</Product>
+		<Description>Open-source metrology and instrument management software.</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="Veraximet-Icon-Transparent.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\Veraximet.UI\Assets\Vx_Logo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
+		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.34" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.34" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.34" />
+
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Veraximet.Contracts\Veraximet.Contracts.csproj" />
+		<ProjectReference Include="..\Veraximet.Domain\Veraximet.Domain.csproj" />
+		<ProjectReference Include="..\Veraximet.Infrastructure\Veraximet.Infrastructure.csproj" />
+		<ProjectReference Include="..\Veraximet.Metrology\Veraximet.Metrology.csproj" />
+		<ProjectReference Include="..\Veraximet.UI\Veraximet.UI.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="Beautify.Contracts">
+			<HintPath>..\..\Beautify\bin\Release\net8.0-windows\Beautify.Contracts.dll</HintPath>
+		</Reference>
+		<Reference Include="Beautify.Controls">
+			<HintPath>..\..\Beautify\bin\Release\net8.0-windows\Beautify.Controls.dll</HintPath>
+		</Reference>
+		<Reference Include="Beautify.Domain">
+			<HintPath>..\..\Beautify\bin\Release\net8.0-windows\Beautify.Domain.dll</HintPath>
+		</Reference>
+		<Reference Include="Beautify.Infrastructure">
+			<HintPath>..\..\Beautify\bin\Release\net8.0-windows\Beautify.Infrastructure.dll</HintPath>
+		</Reference>
+		<Reference Include="Beautify.Logging">
+			<HintPath>..\..\Beautify\bin\Release\net8.0-windows\Beautify.Logging.dll</HintPath>
+		</Reference>
+		<Reference Include="Beautify.Themes">
+			<HintPath>..\..\Beautify\bin\Release\net8.0-windows\Beautify.Themes.dll</HintPath>
+		</Reference>
+		<Reference Include="Beautify.Wpf">
+			<HintPath>..\..\Beautify\bin\Release\net8.0-windows\Beautify.Wpf.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+</Project>

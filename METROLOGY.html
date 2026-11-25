@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="Technical documentation for the Veraximet metrology engine: current algorithm, uncertainty, conformity and suitability for use." name="description" />
+    <title>Veraximet — Metrology and calculations</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f4f7f5;
+            --paper: #fff;
+            --ink: #172522;
+            --muted: #536762;
+            --line: #d6e1dc;
+            --accent: #286652;
+            --soft: #eaf3ee;
+            --warn: #79501b;
+            --warnbg: #fbf3e6;
+            --nav: #101719;
+            --navtext: #e9f0ed;
+            --mono: Consolas,'SFMono-Regular',monospace
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 20px
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font: 16px/1.65 system-ui,-apple-system,'Segoe UI',sans-serif
+        }
+
+        a {
+            color: var(--accent);
+            text-underline-offset: 3px
+        }
+
+            a:hover {
+                text-decoration-thickness: 2px
+            }
+
+        header {
+            background: var(--nav);
+            color: var(--navtext);
+            border-bottom: 4px solid #86bdac
+        }
+
+        .hero {
+            max-width: 1320px;
+            margin: auto;
+            padding: 44px 38px 40px
+        }
+
+        .brand {
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            font-size: .79rem;
+            font-weight: 700;
+            color: #86bdac
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem,4vw,3.3rem);
+            letter-spacing: -.045em;
+            line-height: 1.12;
+            margin: 16px 0
+        }
+
+        .hero p {
+            max-width: 780px;
+            color: #b8cbc5;
+            margin: 0
+        }
+
+        .layout {
+            max-width: 1320px;
+            display: grid;
+            grid-template-columns: 240px minmax(0,1fr);
+            gap: 40px;
+            margin: auto;
+            padding: 32px 38px 64px
+        }
+
+        nav {
+            position: sticky;
+            top: 24px;
+            align-self: start;
+            max-height: 90vh;
+            overflow: auto;
+            border-right: 1px solid var(--line);
+            padding-right: 20px;
+            font-size: .88rem
+        }
+
+            nav strong {
+                display: block;
+                margin-bottom: 12px;
+                color: var(--muted);
+                font-size: .78rem;
+                text-transform: uppercase;
+                letter-spacing: .1em
+            }
+
+            nav a {
+                display: block;
+                color: var(--muted);
+                text-decoration: none;
+                padding: 7px 0
+            }
+
+                nav a:hover {
+                    color: var(--accent)
+                }
+
+        main {
+            min-width: 0
+        }
+
+        section {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px
+        }
+
+        h2 {
+            font-size: 1.65rem;
+            line-height: 1.25;
+            letter-spacing: -.025em;
+            margin: 8px 0 22px
+        }
+
+        h3 {
+            font-size: 1.13rem;
+            line-height: 1.35;
+            margin: 28px 0 12px
+        }
+
+        p {
+            margin: 0 0 14px
+        }
+
+            p:last-child {
+                margin-bottom: 0
+            }
+
+        ul, ol {
+            padding-left: 1.35em
+        }
+
+        li {
+            margin: .35em 0
+        }
+
+        .eyebrow {
+            font-size: .75rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--accent)
+        }
+
+        .future {
+            color: var(--warn)
+        }
+
+        .note {
+            background: var(--soft);
+            border-left: 3px solid var(--accent);
+            padding: 15px 18px;
+            margin: 18px 0;
+            border-radius: 0 6px 6px 0
+        }
+
+        .caution {
+            background: var(--warnbg);
+            border-left-color: #a8752e
+        }
+
+        .eq {
+            display: block;
+            text-align: center;
+            background: #f7f9f8;
+            border: 1px solid var(--line);
+            padding: 17px 12px;
+            margin: 15px 0;
+            border-radius: 7px;
+            overflow-x: auto;
+            font: 1.18rem/1.75 'Cambria Math','STIX Two Math','Times New Roman',serif
+        }
+
+            .eq math {
+                font-size: 1.16em
+            }
+
+            .eq small {
+                display: block;
+                font: .85rem/1.5 system-ui,sans-serif;
+                color: var(--muted)
+            }
+
+        code {
+            font-family: var(--mono);
+            font-size: .88em;
+            background: var(--soft);
+            padding: .13em .35em;
+            border-radius: 4px;
+            overflow-wrap: anywhere
+        }
+
+        pre {
+            background: #172123;
+            color: #e9f0ed;
+            padding: 18px;
+            border-radius: 8px;
+            overflow: auto;
+            font: .87rem/1.65 var(--mono)
+        }
+
+            pre code {
+                background: none;
+                padding: 0;
+                color: inherit;
+                overflow-wrap: normal
+            }
+
+        .table-wrap {
+            overflow-x: auto;
+            margin: 16px 0
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: .92rem
+        }
+
+        th, td {
+            text-align: left;
+            vertical-align: top;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        th {
+            background: var(--soft);
+            font-size: .83rem
+        }
+
+            td.num, th.num {
+                text-align: right;
+                font-variant-numeric: tabular-nums;
+                white-space: nowrap
+            }
+
+        .caption, figcaption {
+            font-size: .83rem;
+            color: var(--muted)
+        }
+
+        figure {
+            margin: 24px 0
+        }
+
+            figure img {
+                max-width: 100%;
+                height: auto;
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                display: block
+            }
+
+        .screenshot {
+            aspect-ratio: 16/9;
+            min-height: 150px;
+            display: grid;
+            place-content: center;
+            text-align: center;
+            padding: 20px;
+            background: #f7f9f8;
+            border: 2px dashed #afc3b9;
+            border-radius: 8px;
+            color: var(--muted)
+        }
+
+            .screenshot strong {
+                font-weight: 600;
+                color: var(--accent)
+            }
+
+        figcaption {
+            margin-top: 8px
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: repeat(2,minmax(0,1fr));
+            gap: 14px;
+            margin: 18px 0
+        }
+
+        .tile {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 16px
+        }
+
+            .tile strong {
+                display: block;
+                margin-bottom: 6px
+            }
+
+            .tile p {
+                font-size: .92rem
+            }
+
+        .good {
+            color: #286652
+        }
+
+        .bad {
+            color: #a63b35
+        }
+
+        .muted {
+            color: var(--muted)
+        }
+
+        footer {
+            max-width: 1320px;
+            margin: auto;
+            padding: 0 38px 32px;
+            color: var(--muted);
+            font-size: .85rem
+        }
+
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: block
+        }
+
+        .legend {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: .8rem;
+            color: var(--muted)
+        }
+
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 100%;
+            margin-right: 5px
+        }
+
+        .print-only {
+            display: none
+        }
+
+        @media(max-width:850px) {
+            .layout {
+                display: block;
+                padding: 20px 15px
+            }
+
+            .hero {
+                padding: 32px 22px
+            }
+
+            nav {
+                position: static;
+                max-height: none;
+                border: 0;
+                border-bottom: 1px solid var(--line);
+                padding: 0 0 20px;
+                margin-bottom: 20px;
+                columns: 2
+            }
+
+                nav strong {
+                    column-span: all
+                }
+
+            section {
+                padding: 22px
+            }
+
+            footer {
+                padding: 0 20px 25px
+            }
+        }
+
+        @media(max-width:480px) {
+            .split {
+                grid-template-columns: 1fr
+            }
+
+            section {
+                padding: 18px
+            }
+
+            .eq {
+                font-size: 1rem
+            }
+
+            nav {
+                columns: 1
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 15mm
+            }
+
+            body {
+                background: white;
+                font-size: 10.5pt
+            }
+
+            header {
+                background: white;
+                color: var(--ink);
+                border-bottom: 1px solid var(--line)
+            }
+
+            .hero {
+                padding: 0 0 16px
+            }
+
+                .hero p, .brand {
+                    color: var(--muted)
+                }
+
+                .hero h1 {
+                    font-size: 25pt
+                }
+
+            .layout {
+                display: block;
+                padding: 0
+            }
+
+            nav {
+                display: none
+            }
+
+            section {
+                border: 0;
+                border-radius: 0;
+                padding: 12px 0;
+                margin: 0 0 10px
+            }
+
+            h2, h3 {
+                break-after: avoid
+            }
+
+            figure, .eq, .note, .tile, tr {
+                break-inside: avoid
+            }
+
+            thead {
+                display: table-header-group
+            }
+
+            a {
+                color: inherit
+            }
+
+            .screenshot {
+                min-height: 100px;
+                max-height: 220px
+            }
+
+            footer {
+                padding: 10px 0
+            }
+
+            .print-only {
+                display: block
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="hero">
+            <div class="brand">Veraximet / Technical documentation</div>
+            <h1>Metrology and calculations</h1>
+            <p>Verification algorithm, interpretation of statistical quantities, measurement uncertainty and criteria for suitability for manufacturing processes.</p>
+        </div>
+    </header>
+    <div class="layout">
+        <nav aria-label="Contents">
+            <strong>Contents</strong>
+            <a href="#scope">01 · Scope and status</a>
+            <a href="#principles">02 · Metrological foundations</a>
+            <a href="#algorithm">03 · Current algorithm</a>
+            <a href="#examples">04 · Examples and plot</a>
+            <a href="#data">05 · Data and responsibilities</a>
+            <a href="#uncertainty">06 · Measurement uncertainty</a>
+            <a href="#decision">07 · Decision rules</a>
+            <a href="#capability">08 · Suitability and capability</a>
+            <a href="#validation">09 · Validation and limitations</a>
+            <a href="#references">10 · References</a>
+        </nav>
+        <main>
+            <section id="scope">
+                <div class="eyebrow">01 / Scope</div>
+                <h2>Scope and implementation status</h2>
+                <p>
+                    Veraximet is designed to document and evaluate the performance of measurement instruments. The current source code, associated with the rule
+                    <code>MaxAbsoluteError.v1</code>, performs basic verifications against MPE limits entered by the operator.
+                </p>
+                <div class="split">
+                    <div class="tile">
+                        <strong class="good">Implemented</strong>
+                        <p>Repeated readings, mean error, maximum absolute error, range, standard deviation, binary comparison against MPE, history and scheduling.</p>
+                    </div>
+                    <div class="tile">
+                        <strong class="future">Planned model</strong>
+                        <p>Uncertainty budgets, guard-band rules, traceability, corrections, normative procedures, process capability and authorization for use.</p>
+                    </div>
+                </div>
+                <div class="note caution">
+                    <strong>Scope limitation.</strong> Planned features are not yet available. The software has not been validated against the full text of the ISO standards and the current algorithm alone does not issue accredited calibration certificates or statements of suitability for manufacturing processes.
+                </div>
+            </section>
+            <section id="principles">
+                <div class="eyebrow">02 / Concepts</div>
+                <h2>Metrological foundations</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Calibration</td>
+                                <td>Establishes the relationship between reference values and indications, with their respective uncertainties; it is not equivalent to a conformity decision.</td>
+                            </tr>
+                            <tr>
+                                <td>Verification</td>
+                                <td>Provides evidence that specified requirements have been fulfilled.</td>
+                            </tr>
+                            <tr>
+                                <td>Adjustment</td>
+                                <td>Changes the instrument's response. Results before and after adjustment (as found / as left) must be distinguished.</td>
+                            </tr>
+                            <tr>
+                                <td>Validation</td>
+                                <td>Demonstrates that requirements and performance are adequate for the intended use.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>Error, uncertainty and repeatability are not synonymous. Error is a difference relative to a reference value; uncertainty quantifies the dispersion of values attributable to the measurand; repeatability concerns precision under defined conditions. A series of closely grouped readings can be systematically wrong.</p>
+                <p>
+                    The MPE limit (
+                    <em>maximum permissible error</em>) is the maximum error permitted by an applicable specification. It is neither resolution, uncertainty nor workpiece tolerance. It may vary with the test point, measurement mode or range.
+                </p>
+            </section>
+            <section id="algorithm">
+                <div class="eyebrow">03 / Implemented</div>
+                <h2>MaxAbsoluteError.v1 algorithm</h2>
+                <p>
+                    The
+                    <code>VerificationCalculator.Calculate</code> method takes a reference value, a non-negative MPE and at least one reading. The model uses a symmetric ±MPE limit for each point.
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Meaning</th>
+                                <th>Source field</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <i>r</i>
+                                </td>
+                                <td>Reference value</td>
+                                <td>
+                                    <code>referenceValue</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i>M</i>
+                                </td>
+                                <td>Maximum permissible error (non-negative magnitude)</td>
+                                <td>
+                                    <code>maximumPermissibleError</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i>x</i>
+                                    <sub>i</sub>
+                                </td>
+                                <td>i-th indication</td>
+                                <td>
+                                    <code>measurements[i]</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i>n</i>
+                                </td>
+                                <td>Number of readings</td>
+                                <td>
+                                    <code>Count</code>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>3.1 Mean and indication errors</h3>
+                <div aria-label="Arithmetic mean equals the sum of readings divided by n" class="eq" role="math">
+                    x̄ = (1/n) Σ
+                    <sub>i=1</sub>
+                    <sup>n</sup> x
+                    <sub>i</sub>
+                </div>
+                <div class="eq">
+                    e
+                    <sub>i</sub> = x
+                    <sub>i</sub> − r    ;    ē = x̄ − r
+                </div>
+                <p>
+                    The mean (
+                    <code>Mean</code>) is the central estimate of the readings. The mean error (
+                    <code>MeanError</code>) retains its sign: positive if the instrument overestimates the reference, negative if it underestimates it. It is not necessarily a complete estimate of bias across the entire measurement range.
+                </p>
+                <h3>3.2 Maximum absolute error and range</h3>
+                <div class="eq">
+                    E
+                    <sub>max</sub> = max
+                    <sub>1≤i≤n</sub> |x
+                    <sub>i</sub> − r|
+                </div>
+                <div class="eq">
+                    R = max
+                    <sub>i</sub>(x
+                    <sub>i</sub>) − min
+                    <sub>i</sub>(x
+                    <sub>i</sub>)
+                </div>
+                <p>
+                    <code>MaximumAbsoluteError</code> identifies the worst reading relative to the reference.
+                    <code>Range</code> describes the difference between the extreme readings; it is not the instrument's nominal measuring range.
+                </p>
+                <h3>3.3 Sample standard deviation</h3>
+                <div class="eq">
+                    <math aria-label="s equals the square root of the sum of squared deviations divided by n minus one" display="block"><mi>s</mi><mo>=</mo><msqrt><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mover><mi>x</mi><mo>¯</mo></mover><mo>)</mo></mrow><mn>2</mn></msup></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></mfrac></msqrt><mspace width="1em"></mspace><mi>n</mi><mo>≥</mo><mn>2</mn></math>
+                </div>
+                <p>
+                    The denominator is
+                    <i>n</i> − 1, not
+                    <i>n</i>. With only one reading,
+                    <code>StandardDeviation</code> is
+                    <code>null</code>, displayed as a dash; it is not zero. With identical readings and at least two observations, s = 0 describes only the observed dispersion, not the absence of uncertainty.
+                </p>
+                <h3>3.4 Point and overall verification decisions</h3>
+                <div class="eq">
+                    Point within limits ⇔ E
+                    <sub>max</sub> ≤ M ⇔ ∀i: −M ≤ e
+                    <sub>i</sub> ≤ M
+                </div>
+                <p>Equality at the limit is accepted. A single reading outside the limit makes the point nonconforming even when the mean error is zero. Neither the range nor the standard deviation directly affects the decision.</p>
+                <div class="eq">
+                    Verification within limits ⇔ ∧
+                    <sub>j=1</sub>
+                    <sup>p</sup> (E
+                    <sub>max,j</sub> ≤ M
+                    <sub>j</sub>)
+                    <small>p = number of entered points, p ≥ 1</small>
+                </div>
+                <p>
+                    An incomplete point is not evaluated and prevents the verification from being saved. A saved verification has an outcome of
+                    <code>Conforming</code> or
+                    <code>Nonconforming</code>.
+                    <code>NotEvaluated</code> represents the absence of an evaluation, not an uncertain decision outcome. There is no
+                    <code>Indeterminate</code> state.
+                </p>
+                <div class="note">The rule applies to the entered points. It does not check whether the test plan covers all mandatory characteristics of a specification or all measurement modes of the instrument.</div>
+                <h3>3.5 Numerical precision and units</h3>
+                <p>
+                    Values, MPE, mean, errors and range are calculated using
+                    <code>decimal</code>. Squared deviations and standard deviation are calculated using
+                    <code>double</code>. Comparison with MPE uses the numerical result rather than the rounded string displayed on screen. The UI accepts a comma or a period as a decimal separator, without thousands separators. The unit is a text field shared by the verification: automatic unit conversion is not implemented. All quantities for a point must therefore use consistent units.
+                </p>
+            </section>
+            <section id="examples">
+                <div class="eyebrow">04 / Implemented</div>
+                <h2>Numerical example and plot interpretation</h2>
+                <p>Consider a reference of 50.000 mm and an MPE of ±0.030 mm. The following data are illustrative examples, not actual calibration results.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Reading</th>
+                                <th class="num">Indication [mm]</th>
+                                <th class="num">Error [mm]</th>
+                                <th>Individual outcome</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>M1</td>
+                                <td class="num">49.960</td>
+                                <td class="num">−0.040</td>
+                                <td class="bad">Outside limits</td>
+                            </tr>
+                            <tr>
+                                <td>M2</td>
+                                <td class="num">50.000</td>
+                                <td class="num">0.000</td>
+                                <td class="good">Within limits</td>
+                            </tr>
+                            <tr>
+                                <td>M3</td>
+                                <td class="num">50.040</td>
+                                <td class="num">+0.040</td>
+                                <td class="bad">Outside limits</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="eq">
+                    x̄ = 50.000 mm   ;   ē = 0.000 mm
+                    <br />E
+                    <sub>max</sub> = 0.040 mm   ;   R = 0.080 mm
+                    <br />s = √[(0.040² + 0 + 0.040²)/2] = 0.040 mm
+                </div>
+                <p>
+                    <strong>Point outcome: outside limits.</strong> The comparison 0.040 &gt; 0.030 yields a negative outcome despite the zero mean error.
+                </p>
+                <figure>
+                    <svg aria-labelledby="plot-title plot-desc" role="img" viewbox="0 0 680 230" xmlns="http://www.w3.org/2000/svg"><title id="plot-title">Example error plot</title><desc id="plot-desc">Three readings with errors of minus 0.04, zero and plus 0.04 millimetres. The region between minus 0.03 and plus 0.03 is highlighted.</desc><rect fill="#f7f9f8" height="158" rx="5" stroke="#d6e1dc" width="590" x="60" y="22"></rect><rect fill="#dceee4" height="158" width="354" x="178" y="22"></rect><g stroke="#d6e1dc"><path d="M60 75H650M60 128H650"></path></g><path d="M178 22V180M532 22V180" stroke="#286652" stroke-width="1.6"></path><path d="M355 22V180" stroke="#a8752e" stroke-dasharray="5 5" stroke-width="2"></path><g stroke-width="3"><path d="M355 48H119M355 154H591" stroke="#a63b35"></path></g><g fill="#a63b35"><circle cx="119" cy="48" r="6"></circle><circle cx="591" cy="154" r="6"></circle></g><circle cx="355" cy="101" fill="#286652" r="6"></circle><g fill="#536762" font-family="system-ui,sans-serif" font-size="12"><text x="15" y="52">M1</text><text x="15" y="105">M2</text><text x="15" y="158">M3</text><text text-anchor="middle" x="178" y="197">−0.030</text><text text-anchor="middle" x="355" y="197">0</text><text text-anchor="middle" x="532" y="197">+0.030</text><text text-anchor="middle" x="355" y="220">Error relative to reference [mm]</text></g></svg>
+                    <div class="legend">
+                        <span><span class="dot" style="background:#286652"></span>Within MPE</span>
+                        <span><span class="dot" style="background:#a63b35"></span>Outside MPE</span>
+                        <span>Dashed line: mean error (zero in this example)</span>
+                    </div>
+                    <figcaption>Illustrative diagram, not a screenshot. The WPF control <code>MeasurementPlot</code> displays signed errors, the ±MPE band and the mean error line. The scale is symmetric and adapts to the greater of MPE and maximum absolute error.</figcaption>
+                </figure>
+                <figure>
+                    <img src="docs/screenshots/Verification.png" alt="Veraximet verification editor"> 
+                    <figcaption>Reserved for the actual verification interface.</figcaption>
+                </figure>
+            </section>
+            <section id="data">
+                <div class="eyebrow">05 / Implemented</div>
+                <h2>Persistence and application responsibilities</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Responsibility</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <code>VerificationPointVM</code>
+                                </td>
+                                <td>Collects readings, validates numerical fields and invokes the calculator to preview results.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>VerificationCalculator</code>
+                                </td>
+                                <td>Calculates statistics and applies the rule, without dependencies on WPF or SQLite.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>VerificationEditorVM</code>
+                                </td>
+                                <td>Manages points, summarizes the outcome and prepares the save request.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>VerificationService</code>
+                                </td>
+                                <td>Validates the request, recalculates the outcome from raw data, saves the verification and updates the instrument.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>Instrument</code>
+                                </td>
+                                <td>Manages operational status, latest outcome, last verification and due date.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>The database stores the instrument identifier, date, operator, unit, notes, decision rule and overall outcome. For each point it records the reference, MPE, description, order and original readings. Derived statistics are not stored as separate fields: they can be reconstructed from the original data using the same algorithm version.</p>
+                <h3>Scheduling and operational status</h3>
+                <div class="eq">
+                    d
+                    <sub>next</sub> = d
+                    <sub>verification</sub> + interval in months
+                    <small>Only for a conforming outcome; calendar month addition is used (DateOnly.AddMonths).</small>
+                </div>
+                <p>
+                    A nonconforming outcome clears the next due date (null). A verification dated earlier than the latest recorded verification is rejected. Schedule status is
+                    <code>NotScheduled</code> if no date is set,
+                    <code>Overdue</code> if before today,
+                    <code>DueSoon</code> if between today and the next 30 days by default, otherwise
+                    <code>Valid</code>.
+                </p>
+                <p>
+                    Operational status (
+                    <code>InService</code>,
+                    <code>Suspended</code>,
+                    <code>Archived</code>) is separate from the conformity outcome. Archived instruments cannot be verified; a negative outcome does not automatically suspend the instrument. Authorization management and any restrictions on manufacturing use remain to be implemented.
+                </p>
+                <figure>
+                    <img src="docs/screenshots/Details.png" alt="Instrument details">
+                </figure>
+                <figure>
+                    <img src="docs/screenshots/History.png" alt="Verification history"> 
+                </figure>
+            </section>
+            <section id="uncertainty">
+                <div class="eyebrow future">06 / Planned extension</div>
+                <h2>Evaluation and propagation of uncertainty</h2>
+                <p>The reference model is the GUM (JCGM 100). Uncertainty is not the same as the observed error and cannot be inferred from dispersion alone. For a result y = f(x₁, …, xₘ), the input quantities, their standard uncertainties, any correlations and the physical model are identified.</p>
+                <h3>6.1 Type A evaluation</h3>
+                <div class="eq">
+                    u
+                    <sub>A</sub>(x̄) = s / √n
+                </div>
+                <p>This relationship applies to the mean of n independent observations under defined conditions. If the manufacturing process uses a single reading, the repeatability contribution must instead be estimated for that reading (for example, s). Increasing the number of observations does not eliminate bias, drift or correlated effects.</p>
+                <h3>6.2 Type B evaluation</h3>
+                <p>The evaluation is based on certificates, specifications, physical models and other available information. Type A and Type B identify the evaluation method, not a distinction between random and systematic errors.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Available information</th>
+                                <th>Model</th>
+                                <th>Standard uncertainty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Certificate: expanded uncertainty U and factor k</td>
+                                <td>According to the certificate</td>
+                                <td>U / k</td>
+                            </tr>
+                            <tr>
+                                <td>Limit ±a</td>
+                                <td>Rectangular</td>
+                                <td>a / √3</td>
+                            </tr>
+                            <tr>
+                                <td>Limit ±a</td>
+                                <td>Symmetric triangular</td>
+                                <td>a / √6</td>
+                            </tr>
+                            <tr>
+                                <td>Resolution q, rounding to the nearest increment</td>
+                                <td>Rectangular ±q/2</td>
+                                <td>q / √12</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>The distribution must be justified. Resolution and repeatability must not be added indiscriminately when both represent the same experimental effect.</p>
+                <h3>6.3 GUM law of propagation of uncertainty</h3>
+                <div class="eq">
+                    c
+                    <sub>i</sub> = ∂f / ∂x
+                    <sub>i</sub>
+                </div>
+                <div class="eq">
+                    u
+                    <sub>c</sub>²(y) = Σ
+                    <sub>i</sub> c
+                    <sub>i</sub>²u
+                    <sub>i</sub>² + 2Σ
+                    <sub>i&lt;j</sub> c
+                    <sub>i</sub>c
+                    <sub>j</sub> Cov(x
+                    <sub>i</sub>, x
+                    <sub>j</sub>)
+                </div>
+                <p>
+                    Covariance can be expressed as ρ
+                    <sub>ij</sub>u
+                    <sub>i</sub>u
+                    <sub>j</sub>, where ρ is the correlation coefficient. Under the linear approximation and for uncorrelated inputs:
+                </p>
+                <div class="eq">
+                    u
+                    <sub>c</sub>(y) = √[Σ
+                    <sub>i</sub> (c
+                    <sub>i</sub>u
+                    <sub>i</sub>)²]
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Combined uncertainty for uncorrelated inputs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>y = a ± b</td>
+                                <td>
+                                    √(u
+                                    <sub>a</sub>² + u
+                                    <sub>b</sub>²)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>y = ab</td>
+                                <td>
+                                    √(b²u
+                                    <sub>a</sub>² + a²u
+                                    <sub>b</sub>²)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>y = a/b, b ≠ 0</td>
+                                <td>
+                                    √[(u
+                                    <sub>a</sub>/b)² + (au
+                                    <sub>b</sub>/b²)²]
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>For strongly nonlinear models or distributions that are not adequately described by linearization, propagation of distributions using Monte Carlo methods can be considered (JCGM 101).</p>
+                <h3>6.4 Expanded uncertainty and coverage</h3>
+                <div class="eq">
+                    U = k · u
+                    <sub>c</sub>
+                </div>
+                <p>
+                    k = 2 corresponds to approximately 95% coverage only under appropriate assumptions of normality and adequate knowledge of u
+                    <sub>c</sub>. For independent contributions with finite degrees of freedom, the Welch–Satterthwaite formula can be used to estimate the effective degrees of freedom:
+                </p>
+                <div class="eq">
+                    ν
+                    <sub>eff</sub> = u
+                    <sub>c</sub>⁴ / Σ
+                    <sub>i</sub> [(c
+                    <sub>i</sub>u
+                    <sub>i</sub>)⁴ / ν
+                    <sub>i</sub>]
+                </div>
+                <p>Where appropriate, k is determined from Student's t-distribution for the required coverage level. Automatic estimation is not provided by the current engine.</p>
+                <h3>6.5 Illustrative verification uncertainty budget</h3>
+                <p>Reference: 20.000 mm; readings: 20.12, 20.12, 20.13, 20.11, 20.12 mm. The mean is 20.120 mm, the mean error is +0.120 mm and the sample standard deviation is 0.007071 mm. Contributions are assumed to be uncorrelated and non-overlapping, with residual effects already expressed in mm.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Calculation</th>
+                                <th class="num">u [mm]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Reference standard</td>
+                                <td>0.004 / 2</td>
+                                <td class="num">0.002000</td>
+                            </tr>
+                            <tr>
+                                <td>Repeatability of the mean</td>
+                                <td>0.007071 / √5</td>
+                                <td class="num">0.003162</td>
+                            </tr>
+                            <tr>
+                                <td>Resolution</td>
+                                <td>0.01 / √12</td>
+                                <td class="num">0.002887</td>
+                            </tr>
+                            <tr>
+                                <td>Residual thermal effect</td>
+                                <td>Hypothetical estimate</td>
+                                <td class="num">0.002000</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Combined</strong>
+                                </td>
+                                <td>Root-sum-of-squares</td>
+                                <td class="num">
+                                    <strong>0.005132</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Expanded</strong>
+                                </td>
+                                <td>k = 2, illustrative</td>
+                                <td class="num">
+                                    <strong>0.010264</strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    The physical model may include thermal, geometric, alignment and contact effects. For a length L and a coefficient of thermal expansion α, ΔL ≈ LαΔT. In the simplified case where temperature is the only uncertain input, u
+                    <sub>L</sub> = |Lα|u
+                    <sub>T</sub>. In an actual verification, expansion of both the instrument and the reference must also be considered.
+                </p>
+            </section>
+            <section id="decision">
+                <div class="eyebrow future">07 / Planned extension</div>
+                <h2>Decision rules and conformity</h2>
+                <p>The decision must refer to an identifiable specification and a stated decision rule. ISO 14253-1, ISO/IEC 17025 and JCGM 106 provide references for defining the model; the following criteria are examples of configurable rules, not a complete reproduction of normative requirements.</p>
+                <h3>7.1 Symmetric rule with guard band U</h3>
+                <p>For an error estimate e with expanded uncertainty U and limits ±M, one possible conservative three-outcome rule is:</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Outcome</th>
+                                <th>Criterion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Conformity demonstrated</td>
+                                <td>|e| + U ≤ M</td>
+                            </tr>
+                            <tr>
+                                <td>Nonconformity demonstrated</td>
+                                <td>|e| − U &gt; M</td>
+                            </tr>
+                            <tr>
+                                <td>Indeterminate</td>
+                                <td>Otherwise</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>Under this rule, conformity is demonstrated when the interval e ± U is contained within the specification; nonconformity is demonstrated when it lies entirely outside. A probability of false acceptance is not automatically assigned from the value of U alone.</p>
+                <figure><svg aria-label="Example of three uncertainty intervals relative to an upper limit" role="img" viewbox="0 0 680 208" xmlns="http://www.w3.org/2000/svg"><rect fill="#f7f9f8" height="152" rx="5" width="450" x="160" y="15"></rect><rect fill="#dceee4" height="152" width="270" x="160" y="15"></rect><path d="M430 15V170" stroke="#286652" stroke-width="2"></path><g fill="#536762" font-family="system-ui,sans-serif" font-size="12"><text x="8" y="47">Conforming</text><text x="8" y="94">Indeterminate</text><text x="8" y="141">Nonconforming</text><text text-anchor="middle" x="160" y="187">0</text><text text-anchor="middle" x="430" y="187">0.030 (MPE)</text><text text-anchor="middle" x="610" y="187">0.050 mm</text></g><g stroke-linecap="round" stroke-width="4"><path d="M205 43H385" stroke="#286652"></path><path d="M295 90H475" stroke="#a8752e"></path><path d="M475 137H601" stroke="#a63b35"></path></g><circle cx="295" cy="43" fill="#286652" r="5"></circle><circle cx="385" cy="90" fill="#a8752e" r="5"></circle><circle cx="538" cy="137" fill="#a63b35" r="5"></circle></svg><figcaption>Illustrative diagram on the positive side of the error axis. The bars show intervals entirely within, straddling and outside the limit. The current engine does not use these intervals.</figcaption></figure>
+                <h3>7.2 Asymmetric specifications</h3>
+                <div class="eq">
+                    LSL + w
+                    <sub>L</sub> ≤ y ≤ USL − w
+                    <sub>U</sub>
+                </div>
+                <p>
+                    LSL and USL are the lower and upper specification limits, w
+                    <sub>L</sub> and w
+                    <sub>U</sub> are the guard bands. For w
+                    <sub>L</sub> = w
+                    <sub>U</sub> = U, nonconformity is demonstrated if y + U &lt; LSL or y − U &gt; USL. One-sided limits and different guard bands require a rule consistent with the applicable risk and contract. An empty acceptance zone must be handled explicitly.
+                </p>
+                <h3>7.3 Future aggregation of outcomes</h3>
+                <p>
+                    Overall conformity will require all mandatory characteristics to be evaluated and conforming. Demonstrated nonconformity of a mandatory characteristic results in a negative outcome; missing or indeterminate data prevent a positive declaration. The outcomes
+                    <em>not evaluated</em> and
+                    <em>indeterminate</em> must remain distinct.
+                </p>
+            </section>
+            <section id="capability">
+                <div class="eyebrow future">08 / Planned extension</div>
+                <h2>Suitability for use and process capability</h2>
+                <p>An instrument may fail to meet the manufacturer's specifications but remain usable in a restricted process, provided the requirements permit it, the correction and residual uncertainty are validated, and the use is authorized. Conversely, a conforming instrument may be unsuitable for an excessively tight manufacturing tolerance.</p>
+                <h3>8.1 Correction of systematic error</h3>
+                <div class="eq">
+                    C(r) = −ē(r)   ;   x
+                    <sub>corr</sub> = I + C(r)
+                </div>
+                <p>A correction estimated at one point is not automatically applicable elsewhere. Measurement mode, interval, conditions, stability, any interpolation and correction uncertainty must be documented.</p>
+                <h3>8.2 Ratio of uncertainty to tolerance</h3>
+                <div class="eq">T = USL − LSL &gt; 0</div>
+                <div class="eq">
+                    Q
+                    <sub>MS</sub> = (2U
+                    <sub>MS</sub>/T) · 100%   ;   Q
+                    <sub>MP</sub> = (2U
+                    <sub>MP</sub>/T) · 100%
+                </div>
+                <p>
+                    MS denotes the measurement system, MP the complete measurement process, including the effects of operators, workpieces, environment, method and stability. U is the expanded uncertainty; 2U is the interval width. Thresholds of 15% for Q
+                    <sub>MS</sub> and 30% for Q
+                    <sub>MP</sub> are indicative industrial references that must be confirmed for the applicable procedure and edition of the standard. They are neither universal nor currently implemented limits.
+                </p>
+                <h3>8.3 Case study: out-of-specification caliper</h3>
+                <p>Using the budget from §6.5, with MPE = 0.030 mm, the mean error is +0.120 mm and the maximum absolute error is 0.130 mm. The current algorithm returns a nonconforming outcome. The guard-band rule with U applied to the mean also demonstrates nonconformity: 0.120 − 0.010264 &gt; 0.030 mm.</p>
+                <p>Assume further tests demonstrate local error stability and the applicability of a −0.120 mm correction. An illustrative manufacturing measurement process budget for a single reading, assuming independent and non-overlapping contributions, is shown below:</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th class="num">u [mm]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Correction estimate</td>
+                                <td class="num">0.005132</td>
+                            </tr>
+                            <tr>
+                                <td>Single-reading repeatability</td>
+                                <td class="num">0.007071</td>
+                            </tr>
+                            <tr>
+                                <td>Operator</td>
+                                <td class="num">0.010000</td>
+                            </tr>
+                            <tr>
+                                <td>Operating temperature</td>
+                                <td class="num">0.005000</td>
+                            </tr>
+                            <tr>
+                                <td>Drift</td>
+                                <td class="num">0.005000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="eq">
+                    u
+                    <sub>MP</sub> ≈ 0.01504 mm   ;   U
+                    <sub>MP</sub> ≈ 0.03009 mm (k = 2)
+                </div>
+                <div class="split">
+                    <div class="tile">
+                        <strong>Process A · T = 1.00 mm</strong>
+                        <p class="good" style="font-size:1.7rem;margin:0;font-weight:650">
+                            Q
+                            <sub>MP</sub> ≈ 6.02%
+                        </p>
+                        <p>Potentially suitable under an illustrative 30% threshold.</p>
+                    </div>
+                    <div class="tile">
+                        <strong>Process B · T = 0.10 mm</strong>
+                        <p class="bad" style="font-size:1.7rem;margin:0;font-weight:650">
+                            Q
+                            <sub>MP</sub> ≈ 60.18%
+                        </p>
+                        <p>Unsuitable under the same threshold.</p>
+                    </div>
+                </div>
+                <p>
+                    For process A, a dimension of 20.00 ± 0.50 mm with a guard band equal to U
+                    <sub>MP</sub> would yield an acceptance interval of 19.53009–20.46991 mm for the corrected measurement. The nominal tolerance remains 19.50–20.50 mm.
+                </p>
+                <div class="note caution">A favorable ratio does not constitute authorization for use. A validated model, experimental evidence, confirmation of applicable requirements and documented approval are necessary. The instrument's original nonconformity remains recorded.</div>
+                <h3>8.4 MSA and Gage R&amp;R</h3>
+                <div class="eq">
+                    σ
+                    <sub>GRR</sub> = √(σ
+                    <sub>EV</sub>² + σ
+                    <sub>AV</sub>²)
+                </div>
+                <div class="eq">
+                    %GRR
+                    <sub>T</sub> = (6σ
+                    <sub>GRR</sub>/T) · 100
+                </div>
+                <p>EV represents repeatability and AV reproducibility. ANOVA studies may require a workpiece–operator interaction contribution. The industrial thresholds of 10% and 30% are indicative references and do not replace assessment of bias, linearity, stability and traceability. The standard deviation currently calculated for a point is not equivalent to a Gage R&amp;R study.</p>
+            </section>
+            <section id="validation">
+                <div class="eyebrow">09 / Engine verification</div>
+                <h2>Edge cases, tests and future development</h2>
+                <p>These cases are test vectors derived from the current rule, not results of executed automated tests. All readings and limits are expressed in the same unit.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>r</th>
+                                <th>MPE</th>
+                                <th>Readings</th>
+                                <th>Expected outcome</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10</td>
+                                <td>0.03</td>
+                                <td>9.97; 10.03</td>
+                                <td>Conforming (equality included)</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>0.03</td>
+                                <td>9.96; 10.04</td>
+                                <td>Nonconforming, mean 10</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>0.03</td>
+                                <td>10.02</td>
+                                <td>Conforming, s undefined</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>0.03</td>
+                                <td>10.04; 10.04</td>
+                                <td>Nonconforming, s = 0</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>0</td>
+                                <td>10; 10</td>
+                                <td>Conforming</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>0</td>
+                                <td>10.001</td>
+                                <td>Nonconforming</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>−0.01</td>
+                                <td>10</td>
+                                <td>Input rejected</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>0.03</td>
+                                <td>None</td>
+                                <td>Input rejected</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Future metrological validation</h3>
+                <ul>
+                    <li>Retain identifiers, certificates and traceability of reference standards, environmental conditions, method and applicable specification.</li>
+                    <li>Version procedures for each instrument family (for example, calipers: external, internal, depth and step measurements).</li>
+                    <li>Implement uncertainty budgets with contributions, distributions, sensitivity coefficients, correlations and coverage factors; do not treat missing data as zero.</li>
+                    <li>Retain decision rules, outcomes for each characteristic and original data to reproduce historical assessments.</li>
+                    <li>Separate metrological conformity, process suitability and operational status; record authorizations, corrections and restrictions on use.</li>
+                    <li>Manage interventions, as-found/as-left conditions, drift, review of verification intervals and impact on previous measurements.</li>
+                </ul>
+                <p>The project has undergone static review. WPF builds and runtime tests require the actual .NET/Beautify environment; metrological validation additionally requires reference cases, applicable normative texts and experimental verification.</p>
+            </section>
+            <section id="references">
+                <div class="eyebrow">10 / Technical sources</div>
+                <h2>References and source code</h2>
+                <p>The following references define the working framework. Before adopting a formal procedure, check the applicable edition, contractual requirements and full text. This document does not certify conformity to these standards.</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Scope</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a href="https://www.bipm.org/en/committees/jc/jcgm/publications">JCGM 200 (VIM)</a>
+                                </td>
+                                <td>International Vocabulary of Metrology.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="https://www.bipm.org/en/doi/10.59161/jcgm100-2008e">JCGM 100 (GUM)</a>
+                                </td>
+                                <td>Evaluation and propagation of uncertainty.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="https://www.bipm.org/en/committees/jc/jcgm/publications">JCGM 101 and JCGM 106</a>
+                                </td>
+                                <td>Monte Carlo and uncertainty in conformity assessment.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="https://www.iso.org/standard/10012">ISO 10012</a> / ISO 9001
+                                </td>
+                                <td>Measurement management and quality management systems.</td>
+                            </tr>
+                            <tr>
+                                <td>ISO/IEC 17025</td>
+                                <td>Laboratory competence, traceability and statements of conformity.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="https://www.iso.org/standard/70137.html">ISO 14253-1</a>
+                                </td>
+                                <td>Decision rules for GPS products and measuring equipment.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="https://www.iso.org/standard/89276.html">ISO 22514-7</a>
+                                </td>
+                                <td>Capability of measurement processes and systems.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="https://www.iso.org/standard/71149.html">ISO 13385-1</a>
+                                </td>
+                                <td>Metrological characteristics of calipers.</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="https://global-aci.org/en/global_aci-documents/?cat_id=5">Global ACI</a> / ILAC guidance
+                                </td>
+                                <td>Application guidance on uncertainty and conformity decisions.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Source code references</h3>
+                <ul>
+                    <li>
+                        <a href="Veraximet.Metrology/VerificationCalculator.cs">Veraximet.Metrology/VerificationCalculator.cs</a>
+                    </li>
+                    <li>
+                        <a href="Veraximet.Metrology/VerificationPointResult.cs">Veraximet.Metrology/VerificationPointResult.cs</a>
+                    </li>
+                    <li>
+                        <a href="Veraximet.Infrastructure/Services/VerificationService.cs">Veraximet.Infrastructure/Services/VerificationService.cs</a>
+                    </li>
+                    <li>
+                        <a href="Veraximet.Domain/Entitys/Instrument.cs">Veraximet.Domain/Entitys/Instrument.cs</a>
+                    </li>
+                    <li>
+                        <a href="Veraximet/Wpf/Features/Verification/ViewModels/VerificationPointVM.cs">VerificationPointVM.cs</a> and
+                        <a href="Veraximet/Wpf/Features/Verification/Views/MeasurementPlot.cs">MeasurementPlot.cs</a>
+                    </li>
+                </ul>
+                <p class="caption">Source code links are relative to the repository root.</p>
+            </section>
+        </main>
+    </div>
+    <footer>
+        Veraximet · Metrological model documentation · Current rule: MaxAbsoluteError.v1 ·
+        <a href="README.md">README</a>
+        AI-generated sections of this document have been reviewed
+    </footer>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<UserControl x:Class="Veraximet.Wpf.Features.Instrument.Views.InstrumentDetail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Veraximet.Wpf.Features.Instrument.Views"
+             mc:Ignorable="d" 
+             Background="{StaticResource SurfaceBrush}"
+             Foreground="{StaticResource PrimaryTextBrush}"
+             FontFamily="{DynamicResource Font.Primary}"
+             UseLayoutRounding="True" SnapsToDevicePixels="True"
+             d:DesignHeight="1450" d:DesignWidth="1800">
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto"
+                  Background="{StaticResource SurfaceBrush}">
+        <Grid Margin="34,30,34,32" MinWidth="970">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+
+            <Grid Grid.Row="0" Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="ASSET MANAGEMENT / INSTRUMENT DETAILS"
+                               Style="{StaticResource Workspace.EyebrowTextStyle}" />
+                    <TextBlock Text="{Binding Heading}" Margin="0,8,0,5"
+                               Style="{StaticResource Workspace.PageTitleTextStyle}" />
+                    <TextBlock Text="{Binding CodeLabel}" FontFamily="{DynamicResource Font.Mono}"
+                               Style="{StaticResource Workspace.DescriptionTextStyle}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="←  Back to register"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding BackCommand}" Margin="0,0,10,0" />
+                    <Button Content="↻  Refresh"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding RefreshCommand}" Margin="0,0,10,0" />
+                    <Button Content="Edit instrument"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Command="{Binding EditCommand}" IsEnabled="{Binding CanEdit}" />
+                </StackPanel>
+            </Grid>
+
+
+            <StackPanel Grid.Row="1">
+                <Border Background="{StaticResource Workspace.LoadingBrush}"
+                        BorderBrush="{StaticResource Workspace.LoadingBorderBrush}"
+                        BorderThickness="1" CornerRadius="8" Padding="13,10" Margin="0,0,0,14">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <StackPanel>
+                        <TextBlock Text="Loading instrument details…"
+                                   Foreground="{StaticResource AccentBrush}"
+                                   FontSize="{DynamicResource Font.Size.TableCell}" Margin="0,0,0,8" />
+                        <ProgressBar Height="3" IsIndeterminate="True" BorderThickness="0"
+                                     Foreground="{StaticResource AccentBrush}" />
+                    </StackPanel>
+                </Border>
+                <Border Background="{StaticResource Workspace.ErrorBrush}"
+                        BorderBrush="{StaticResource Workspace.ErrorBorderBrush}"
+                        BorderThickness="1" CornerRadius="8" Padding="13,10" Margin="0,0,0,14">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasError}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+                               FontSize="{DynamicResource Font.Size.TableCell}"
+                               Foreground="{StaticResource DangerBrush}" />
+                </Border>
+            </StackPanel>
+
+
+            <Border Grid.Row="2" Style="{StaticResource PanelStyle}" Margin="0,0,0,20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Current status" Style="{StaticResource Workspace.SectionTitleTextStyle}"
+                               Margin="0,0,0,17" />
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="OPERATIONAL" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding OperationalStatusLabel}" Margin="0,9,0,0"
+                                       Style="{StaticResource Workspace.OperationalTextStyle}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="CONFORMITY" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <Border Style="{StaticResource Workspace.ConformityBadgeStyle}" Margin="0,8,0,0">
+                                <TextBlock Text="{Binding ConformityStatusLabel}"
+                                           Style="{StaticResource Workspace.ConformityTextStyle}" />
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="VERIFICATION DEADLINE" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding DueStatusLabel}" Margin="0,9,0,0"
+                                       Style="{StaticResource Workspace.DueTextStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+
+
+            <Grid Grid.Row="3" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource PanelStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Identification" Style="{StaticResource Workspace.SectionTitleTextStyle}" />
+                        <Border Height="1" Margin="0,17,0,19" Background="{StaticResource StrokeBrush}" />
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="INSTRUMENT CODE" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding Instrument.Code, TargetNullValue=—, FallbackValue=—}"
+                                       Style="{StaticResource Workspace.DetailMonoValueTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="NAME" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding Instrument.Name, TargetNullValue=—, FallbackValue=—}"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="CATEGORY" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding Instrument.Category, TargetNullValue=—, FallbackValue=—}"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="MANUFACTURER" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding Instrument.Manufacturer, TargetNullValue=—, FallbackValue=—}"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="MODEL" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding Instrument.Model, TargetNullValue=—, FallbackValue=—}"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="SERIAL NUMBER" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding Instrument.SerialNumber, TargetNullValue=—, FallbackValue=—}"
+                                       Style="{StaticResource Workspace.DetailMonoValueTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource PanelStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Location &amp; information" Style="{StaticResource Workspace.SectionTitleTextStyle}" />
+                        <Border Height="1" Margin="0,17,0,19" Background="{StaticResource StrokeBrush}" />
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="DEPARTMENT" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding Instrument.Department, TargetNullValue=—, FallbackValue=—}"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="LOCATION" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding Instrument.Location, TargetNullValue=—, FallbackValue=—}"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="DESCRIPTION" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding Instrument.Description, TargetNullValue=—, FallbackValue=—}"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="NOTES" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding Instrument.Notes, TargetNullValue=—, FallbackValue=—}"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" Margin="0,6,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource PanelStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Verification schedule" Style="{StaticResource Workspace.SectionTitleTextStyle}" />
+                        <TextBlock Text="Schedule and latest stored results" Margin="0,6,0,0"
+                                   Style="{StaticResource Workspace.DescriptionTextStyle}" />
+                        <Border Height="1" Margin="0,17,0,19" Background="{StaticResource StrokeBrush}" />
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="INTERVAL" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding VerificationIntervalLabel}" Margin="0,6,0,0"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,17">
+                            <TextBlock Text="LAST VERIFICATION" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding LastVerificationLabel}" Margin="0,6,0,0"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="NEXT DUE DATE" Style="{StaticResource Workspace.DetailLabelTextStyle}" />
+                            <TextBlock Text="{Binding NextDueLabel}" Margin="0,6,0,0"
+                                       Style="{StaticResource Workspace.DetailValueTextStyle}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource PanelStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Verification history" Style="{StaticResource Workspace.SectionTitleTextStyle}" />
+                        <TextBlock Text="Measurements and recorded outcomes" Margin="0,6,0,0"
+                                   Style="{StaticResource Workspace.DescriptionTextStyle}" />
+                        <Border Height="1" Margin="0,17,0,20" Background="{StaticResource StrokeBrush}" />
+                        <ItemsControl ItemsSource="{Binding VerificationHistory}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource CardAltBrush}" CornerRadius="6" Padding="10" Margin="0,0,0,6">
+                                        <DockPanel>
+                                            <TextBlock DockPanel.Dock="Right" Text="{Binding Result}" FontWeight="SemiBold" Margin="10,0,0,0"/>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Date, StringFormat=dd MMM yyyy}"/>
+                                                <TextBlock Text="{Binding PerformedBy}" Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="Full readings are available in Verification history." Foreground="{DynamicResource MutedTextBrush}" TextWrapping="Wrap"/>
+                        <Button Content="New verification" Style="{StaticResource PrimaryButtonStyle}"
+                                Margin="0,16,0,0" HorizontalAlignment="Right"
+                                Command="{Binding StartVerificationCommand}" IsEnabled="{Binding CanStartVerification}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
